@@ -18,5 +18,18 @@
   "bugs": {
     "url": "https://github.com/johnalexladra/mern-stack/issues"
   },
-  "homepage": "https://github.com/johnalexladra/mern-stack#readme"
+  "homepage": "https://github.com/johnalexladra/mern-stack#readme",
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^5.18.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
 }
