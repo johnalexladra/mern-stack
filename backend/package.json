@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend/server-side",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnalexladra/mern-stack.git"
+  },
+  "keywords": [
+    "mern"
+  ],
+  "author": "John Alex Ladra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnalexladra/mern-stack/issues"
+  },
+  "homepage": "https://github.com/johnalexladra/mern-stack#readme"
+}
