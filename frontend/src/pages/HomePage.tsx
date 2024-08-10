@@ -6,8 +6,8 @@ const HomePage: React.FC = () => {
     <div className="container mt-4">
       <h1>Homepage</h1>
       <p>Welcome to the homepage!</p>
-      <Link to="/login" className="btn btn-primary">Login</Link>
-      <Link to="/register" className="btn btn-secondary ms-2">Register</Link>
+      <Link to="/signin" className="btn btn-primary">Login</Link>
+      <Link to="/signup" className="btn btn-secondary ms-2">Register</Link>
     </div>
   );
 };

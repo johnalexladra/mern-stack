@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { login as reduxLogin } from '../redux/authSlice';
-import useAuth from '../hooks/useAuth';  // Import the custom hook
-import { loginUser } from '../api/api';
+import { login as reduxLogin } from '../../redux/authSlice';
+import useAuth from '../../hooks/useAuth';  // Import the custom hook
+import { signIn } from '../../api/api';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -16,7 +16,7 @@ const LoginPage: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { token } = await loginUser(username, password);
+      const { token } = await signIn(username, password);
       dispatch(reduxLogin({ username, token }));
       login(username, token);
       navigate('/');

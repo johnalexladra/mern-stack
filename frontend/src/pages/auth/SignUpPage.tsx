@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../api/api';
+import { signUp } from '../../api/api';
 
-const RegistrationPage: React.FC = () => {
+const SignUpPage: React.FC = () => {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -11,8 +12,8 @@ const RegistrationPage: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await registerUser(username, password);
-      navigate('/login');
+      await signUp(username, password);
+      navigate('/signin');
     } catch (err) {
       setError('Registration failed');
       console.log(err)
@@ -35,6 +36,16 @@ const RegistrationPage: React.FC = () => {
           />
         </div>
         <div className="mb-3">
+          <label htmlFor="email" className="form-label">Email</label>
+          <input
+            type="email"
+            id="email"
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
           <label htmlFor="password" className="form-label">Password</label>
           <input
             type="password"
@@ -50,4 +61,4 @@ const RegistrationPage: React.FC = () => {
   );
 };
 
-export default RegistrationPage;
+export default SignUpPage;
