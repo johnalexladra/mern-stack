@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login as reduxLogin } from '../redux/authSlice';
-import { useAuth } from '../context/AuthContext';
+import useAuth from '../hooks/useAuth';  // Import the custom hook
 import { loginUser } from '../api/api';
 
 const LoginPage: React.FC = () => {
