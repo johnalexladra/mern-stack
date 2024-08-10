@@ -17,3 +17,20 @@ export const findUserByEmail = async (email: string) => {
     where: { email },
   });
 };
+
+export const findUserByUsername = async (username: string) => {
+  return await prisma.user.findUnique({
+    where: { username },
+  });
+};
+
+export const findUserByEmailAndUsername = async (username: string, email: string) => {
+  return await prisma.user.findFirst({
+    where: {
+      OR: [
+        { username },
+        { email },
+      ],
+    },
+  });
+};

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createUser, findUserByEmail } from '../models/auth.model';
+import { createUser, findUserByEmail, findUserByUsername } from '../models/auth.model';
 import { hashPassword, comparePassword, generateToken } from '../utilities/auth';
 
 export const signup = async (req: Request, res: Response) => {
@@ -19,12 +19,12 @@ export const signup = async (req: Request, res: Response) => {
 };
 
 export const signin = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
+  const { username, password } = req.body;
+  if (!username || !password) {
     return res.status(400).json({ error: 'Email and password are required' });
   }
 
-  const user = await findUserByEmail(email);
+  const user = await findUserByUsername(username);
   if (!user || !(await comparePassword(password, user.password))) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
