@@ -19,12 +19,12 @@ export const signup = async (req: Request, res: Response) => {
 };
 
 export const signin = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
+  const { email, password } = req.body;
+  if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required' });
   }
 
-  const user = await findUserByUsername(username);
+  const user = await findUserByEmail(email);
   if (!user || !(await comparePassword(password, user.password))) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
