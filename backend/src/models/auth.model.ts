@@ -24,12 +24,12 @@ export const findUserByUsername = async (username: string) => {
   });
 };
 
-export const findUserByEmailAndUsername = async (username: string, email: string) => {
+export const findUserByEmailAndUsername = async (userOREmail: string) => {
   return await prisma.user.findFirst({
     where: {
       OR: [
-        { username },
-        { email },
+        { username: userOREmail },
+        { email: userOREmail },
       ],
     },
   });
