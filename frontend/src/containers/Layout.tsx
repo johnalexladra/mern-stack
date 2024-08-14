@@ -20,6 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     {token ? (
                         <>
                             <Nav.Link as={Link} to="/cards">Card List</Nav.Link>
+                            <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
                             <Button variant="outline-light" onClick={logout}>Sign Out</Button>
                         </>
                     ) : (
