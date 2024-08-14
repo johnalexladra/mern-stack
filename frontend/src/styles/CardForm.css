@@ -1,0 +1,27 @@
+.card-form-container {
+  margin-bottom: 20px;
+}
+
+.card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.card-form input,
+.card-form select,
+.card-form button {
+  padding: 10px;
+  margin: 5px 0;
+}
+
+.card-form button {
+  cursor: pointer;
+}
+
+.card-form-container button {
+  margin-top: 10px;
+}
