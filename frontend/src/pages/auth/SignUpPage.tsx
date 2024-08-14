@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signUp } from '../../api/api';
+import { Link } from 'react-router-dom';
+import { Container, Form, Button, Alert } from 'react-bootstrap';
 
 const SignUpPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -16,48 +18,55 @@ const SignUpPage: React.FC = () => {
       navigate('/signin');
     } catch (err) {
       setError('Registration failed');
-      console.log(err)
+      console.log(err);
     }
   };
 
   return (
-    <div className="container mt-4">
+    <Container className="mt-4">
       <h1>Register</h1>
-      {error && <div className="alert alert-danger">{error}</div>}
-      <form onSubmit={handleRegister}>
-        <div className="mb-3">
-          <label htmlFor="username" className="form-label">Username</label>
-          <input
+      {error && <Alert variant="danger">{error}</Alert>}
+      <Form onSubmit={handleRegister}>
+        <Form.Group className="mb-3" controlId="username">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
             type="text"
-            id="username"
-            className="form-control"
+            placeholder="Enter username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="email">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
             type="email"
-            id="email"
-            className="form-control"
+            placeholder="Enter email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
-          <input
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             type="password"
-            id="password"
-            className="form-control"
+            placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
-        </div>
-        <button type="submit" className="btn btn-primary">Register</button>
-      </form>
-    </div>
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Register
+        </Button>
+      </Form>
+      <div className="mt-3">
+        <p>
+          Already have an account? <Link to="/signin">Log in here</Link>
+        </p>
+      </div>
+    </Container>
   );
 };
 

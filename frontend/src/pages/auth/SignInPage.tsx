@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import { login as reduxLogin } from '../../redux/authSlice';
 import useAuth from '../../hooks/useAuth';  // Import the custom hook
 import { signIn } from '../../api/api';
+import { Form, Button, Alert } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -22,37 +24,44 @@ const LoginPage: React.FC = () => {
       navigate('/');
     } catch (err) {
       setError('Invalid credentials');
-      console.log(err)
+      console.error(err);
     }
   };
 
   return (
     <div className="container mt-4">
       <h1>Login</h1>
-      {error && <div className="alert alert-danger">{error}</div>}
-      <form onSubmit={handleLogin}>
-        <div className="mb-3">
-          <label htmlFor="username" className="form-label">Username</label>
-          <input
+      {error && <Alert variant="danger">{error}</Alert>}
+      <Form onSubmit={handleLogin}>
+        <Form.Group className="mb-3" controlId="formBasicUsername">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
             type="text"
-            id="username"
-            className="form-control"
+            placeholder="Enter username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
-          <input
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             type="password"
-            id="password"
-            className="form-control"
+            placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </div>
-        <button type="submit" className="btn btn-primary">Login</button>
-      </form>
+        </Form.Group>
+
+        <Button variant="primary" type="submit">
+          Login
+        </Button>
+      </Form>
+      <div className="mt-3">
+        <p>
+          Don't have an account? <Link to="/signup">Register here</Link>
+        </p>
+      </div>
     </div>
   );
 };
