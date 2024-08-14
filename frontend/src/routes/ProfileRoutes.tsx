@@ -1,6 +1,4 @@
-// src/routes/profileRoutes.tsx
-
-import React from 'react';
+// import React from 'react';
 import { Route } from 'react-router-dom';
 import ProfilePage from '../pages/ProfilePage';
 import ProtectedRoute from './ProtectedRoute';
