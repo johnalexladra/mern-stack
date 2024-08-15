@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CreditCard from './CreditCard';
 import CardForm from './CardForm';
-import { dummyCreditCardData, ICreditCard as CardType } from '../data/creditData';
+import { dummyCreditCardData, ICreditCard as CardType } from '../api/data/creditData';
 import '../styles/CardManager.css'; 
 
 const CardManager: React.FC = () => {

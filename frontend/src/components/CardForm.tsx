@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ICreditCard as CardType } from '../data/creditData';
+import { ICreditCard as CardType } from '../api/data/creditData';
 import '../styles/CardForm.css';
 
 interface CardFormProps {
