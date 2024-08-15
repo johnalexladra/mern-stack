@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CreditCard from './CreditCard';
-import CardForm from './CardForm';
+import CardFormModal from './CardFormModal';
 import { dummyCreditCardData, ICreditCard as CardType } from '../api/data/creditData';
 import '../styles/CardManager.css'; 
 
@@ -44,7 +44,7 @@ const CardManager: React.FC = () => {
     <div className="card-manager">
       <h1>Card Manager</h1>
       {!isFormVisible && <button onClick={() => setIsFormVisible(true)}>Add New Card</button>}
-      <CardForm
+      <CardFormModal
         initialCard={editMode !== null ? cards.find(card => card.id === editMode) || initialCard : initialCard}
         isVisible={isFormVisible}
         onSave={handleSaveEdit}
