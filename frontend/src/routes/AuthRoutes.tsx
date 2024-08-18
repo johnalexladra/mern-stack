@@ -1,5 +1,3 @@
-// src/routes/authRoutes.tsx
-
 import React from 'react';
 import { Route } from 'react-router-dom';
 import SignInPage from '../pages/auth/SignInPage';
