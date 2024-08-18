@@ -1,23 +1,35 @@
 // src/features/auth/types.ts
 
+// Define the structure of the user object
 export interface User {
-  // id: string;
   username: string;
-  token: string;
+  // Add additional user fields if necessary
 }
 
+// Define the structure of the authentication state
 export interface AuthState {
   user: User | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
+  accessToken: string | null; // Store access token here
 }
 
+// Define the structure of login credentials
 export interface LoginCredentials {
   email: string;
   password: string;
 }
 
+// Define the structure of the login response from the API
 export interface LoginResponse {
-  username: string;
-  token: string;
+  user: User;
+  accessToken: string; // Add additional fields if necessary
+  refreshToken?: string; // Optional, if using refresh tokens
+}
+
+// Define the structure of the response for token refresh
+export interface RefreshResponse {
+  user: User;
+  accessToken: string; // New access token
+  refreshToken?: string; // Optional, if refresh token is updated
 }
