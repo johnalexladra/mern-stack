@@ -1,11 +1,9 @@
-// src/features/auth/authSlice.ts
-
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { AuthState, User, LoginCredentials, LoginResponse } from './types';
+import axios from 'axios';
 
 const initialState: AuthState = {
-  user: null,
+  user: JSON.parse(localStorage.getItem('user') || 'null'),
   status: 'idle',
   error: null
 };
@@ -34,6 +32,7 @@ const authSlice = createSlice({
     logout(state) {
       state.user = null;
       state.status = 'idle';
+      localStorage.removeItem('user');
     }
   },
   extraReducers: (builder) => {
@@ -45,6 +44,7 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload;
         state.error = null;
+        localStorage.setItem('user', JSON.stringify(action.payload));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
