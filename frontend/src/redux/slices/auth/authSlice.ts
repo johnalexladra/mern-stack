@@ -1,96 +1,114 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { User, AuthState, LoginCredentials, LoginResponse, RefreshResponse } from '../auth/types';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { signUp, signIn, signOut, refreshToken } from '../../../api/authApi';
 
-// Initialize state from localStorage
+// Define the initial state of the auth slice
+interface AuthState {
+  user: { email: string } | null;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+}
+
 const initialState: AuthState = {
-  user: JSON.parse(localStorage.getItem('user') || 'null'),
+  user: null,
   status: 'idle',
   error: null,
-  accessToken: localStorage.getItem('accessToken') || null,
 };
 
-// Async thunk for login
-export const loginUser = createAsyncThunk<User, LoginCredentials, { rejectValue: string }>(
-  'auth/loginUser',
-  async (credentials, { rejectWithValue }) => {
+// Async thunk for user signup
+export const signup = createAsyncThunk(
+  'auth/signup',
+  async (credentials: { email: string; username: string; password: string }, thunkAPI) => {
     try {
-      const response = await axios.post<LoginResponse>(import.meta.env.VITE_API_URL + '/auth/signin', credentials);
-      const { user, accessToken } = response.data;
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('user', JSON.stringify(user));
-      return user; // Return only the user
-      // return response.data.user;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data.message || 'Failed to login');
-      } else {
-        return rejectWithValue('An unexpected error occurred');
-      }
+      const data = await signUp(credentials);
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 
-// Async thunk for token refresh
-export const refreshToken = createAsyncThunk<User, void, { rejectValue: string }>(
-  'auth/refreshToken',
-  async (_, { rejectWithValue }) => {
+// Async thunk for user signin
+export const signin = createAsyncThunk(
+  'auth/signin',
+  async (credentials: { email: string; password: string }, thunkAPI) => {
     try {
-      const response = await axios.post<RefreshResponse>('/api/refresh', {
-        refreshToken: localStorage.getItem('refreshToken')
-      });
-      localStorage.setItem('accessToken', response.data.accessToken);
-      return response.data.user;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data.message || 'Failed to refresh token');
-      } else {
-        return rejectWithValue('An unexpected error occurred');
-      }
+      const data = await signIn(credentials);
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 
+// Async thunk for user signout
+export const signout = createAsyncThunk('auth/signout', async () => {
+  await signOut();
+});
+
+// Async thunk for refreshing the token
+export const refreshAuthToken = createAsyncThunk(
+  'auth/refreshAuthToken',
+  async (_, thunkAPI) => {
+    try {
+      const data = await refreshToken();
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// Create the auth slice
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {
-    logout(state) {
-      state.user = null;
-      state.accessToken = null;
-      state.status = 'idle';
-      state.error = null;
-      localStorage.removeItem('user');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, (state) => {
+      // Sign Up
+      .addCase(signup.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(signup.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.user = action.payload;
-        state.error = null;
-        localStorage.setItem('user', JSON.stringify(action.payload));
+        state.user = action.payload.user;
+        localStorage.setItem('token', action.payload.token);
       })
-      .addCase(loginUser.rejected, (state, action) => {
+      .addCase(signup.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload || 'Login failed';
+        state.error = action.payload as string;
       })
-      .addCase(refreshToken.fulfilled, (state, action: PayloadAction<User>) => {
-        state.user = action.payload;
-        state.error = null;
+      // Sign In
+      .addCase(signin.pending, (state) => {
+        state.status = 'loading';
       })
-      .addCase(refreshToken.rejected, (state, action) => {
-        state.error = action.payload || 'Token refresh failed';
-        // TODO: Optionally redirect to login
+      .addCase(signin.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.user = action.payload.user;
+        localStorage.setItem('token', action.payload.token);
+      })
+      .addCase(signin.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+      })
+      // Sign Out
+      .addCase(signout.fulfilled, (state) => {
+        state.user = null;
+        localStorage.removeItem('token');
+      })
+      // Refresh Token
+      .addCase(refreshAuthToken.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(refreshAuthToken.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        localStorage.setItem('token', action.payload.token);
+      })
+      .addCase(refreshAuthToken.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
       });
-  }
+  },
 });
-
-export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;

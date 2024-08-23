@@ -11,7 +11,6 @@ export interface AuthState {
   user: User | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
-  accessToken: string | null; // Store access token here
 }
 
 // Define the structure of login credentials
@@ -32,4 +31,19 @@ export interface RefreshResponse {
   user: User;
   accessToken: string; // New access token
   refreshToken?: string; // Optional, if refresh token is updated
+}
+
+export interface RegisterData {
+  email: string;
+  username: string;
+  password: string;
+}
+
+export interface RegisterResponse {
+  email: string;
+  token: string;
+}
+
+export interface ErrorResponse {
+  message: string;
 }
