@@ -10,9 +10,12 @@ const axiosInstance = axios.create({
   }
 });
 
-// Add request and response interceptors for handling tokens
+// Add a request interceptor
 axiosInstance.interceptors.request.use(
-  config => {
+  (config) => {
+    // You can add authorization headers or modify the request config here
+    // e.g., add authentication headers
+    // 
     // TODO: Get the token from the store
     const token = localStorage.getItem('authToken'); 
     if (token) {
@@ -20,12 +23,21 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  error => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
+// Add a response interceptor
 axiosInstance.interceptors.response.use(
-  response => response,
-  error => {
+  (response) => {
+    // You can modify the response data here, 
+    // e.g., handling pagination
+    return response;
+  },
+  (error) => {
+    // Handle errors globally if needed
+
     // Handle token expiration, etc.
     if (error.response && error.response.status === 401) {
       // For example, you can dispatch a logout action here
