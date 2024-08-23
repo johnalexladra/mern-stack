@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { signUp, signIn, signOut, refreshToken } from '../../../api/authApi';
-import { AuthState, LoginCredentials, RegisterData } from './types';
-import { extractErrorMessage } from '../../../utilities/errorUtils';
+import { extractErrorMessage } from '../../utilities/errorUtils';
+import { AuthError, AuthResponse, AuthState, LoginCredentials, RegisterData } from './authTypes';
 
 const initialState: AuthState = {
   user: null,
@@ -10,44 +10,60 @@ const initialState: AuthState = {
 };
 
 // Async thunk for user signup
-export const signup = createAsyncThunk(
+export const signup = createAsyncThunk<
+  AuthResponse, // Return type of the payload creator
+  RegisterData, // Type of the argument to the payload creator
+  { rejectValue: AuthError } // Extra options to pass the error shape
+>(
   'auth/signup',
-  async (userData: RegisterData, thunkAPI) => {
+  async (userData, thunkAPI) => {
     try {
-      const data = await signUp(userData);
+      const data = await signUp(userData); // Assume signUp is defined elsewhere
       return data;
-    } catch (error: unknown) {
-      return thunkAPI.rejectWithValue(extractErrorMessage(error));
+    } catch (error) {
+      return thunkAPI.rejectWithValue(extractErrorMessage(error)); // Handle errors with specific shape
     }
   }
 );
 
 // Async thunk for user signin
-export const signin = createAsyncThunk(
+export const signin = createAsyncThunk<
+  AuthResponse,
+  LoginCredentials,
+  { rejectValue: AuthError }
+>(
   'auth/signin',
-  async (credentials: LoginCredentials, thunkAPI) => {
+  async (credentials, thunkAPI) => {
     try {
-      const data = await signIn(credentials);
+      const data = await signIn(credentials); // Assume signIn is defined elsewhere
       return data;
-    } catch (error: unknown) {
+    } catch (error) {
       return thunkAPI.rejectWithValue(extractErrorMessage(error));
     }
   }
 );
 
 // Async thunk for user signout
-export const signout = createAsyncThunk('auth/signout', async () => {
-  await signOut();
-});
+export const signout = createAsyncThunk<void>(
+  'auth/signout',
+  async () => {
+    await signOut(); // Assume signOut is defined elsewhere
+  }
+);
+
 
 // Async thunk for refreshing the token
-export const refreshAuthToken = createAsyncThunk(
+export const refreshAuthToken = createAsyncThunk<
+  AuthResponse,
+  void,
+  { rejectValue: AuthError }
+>(
   'auth/refreshAuthToken',
   async (_, thunkAPI) => {
     try {
-      const data = await refreshToken();
+      const data = await refreshToken(); // Assume refreshToken is defined elsewhere
       return data;
-    } catch (error: unknown) {
+    } catch (error) {
       return thunkAPI.rejectWithValue(extractErrorMessage(error));
     }
   }
@@ -71,7 +87,7 @@ const authSlice = createSlice({
       })
       .addCase(signup.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload as string;
+        state.error = action.payload as AuthError;
       })
       // Sign In
       .addCase(signin.pending, (state) => {
@@ -84,7 +100,7 @@ const authSlice = createSlice({
       })
       .addCase(signin.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload as string;
+        state.error = action.payload as AuthError;
       })
       // Sign Out
       .addCase(signout.fulfilled, (state) => {
@@ -101,7 +117,7 @@ const authSlice = createSlice({
       })
       .addCase(refreshAuthToken.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload as string;
+        state.error = action.payload as AuthError;
       });
   },
 });
